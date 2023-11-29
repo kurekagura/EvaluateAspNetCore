@@ -1,0 +1,35 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>WebAPIのレスポンスをFormData(multipart/form-data)で戻せるかの検証</h1>
+
+<button id="IdFormData">FormData</button>
+
+<img id="IdImg1"/>
+
+@section Scripts{
+    <script src="~/js/site.js"></script>
+
+    <script>
+        $('#IdMultiPart').on('click', function () {
+            getFormData('@Url.Action("Get","MultiPart")');
+        });
+
+        $('#IdFormData').on('click', function () {
+            getFormDataAsync('@Url.Action("Get","FormData")')
+                .then((data) => {
+                    console.log(data.size);
+                    const blob = new Blob([data.bin], { type: data.contentType });
+                    const imgUrl = URL.createObjectURL(blob);
+                    const imgElement = document.getElementById('IdImg1');
+                    imgElement.src = imgUrl;
+                    imgElement.dataset.mySize = `${data.size.width},${data.size.height}`;
+                }).catch(error => {
+                    console.error('エラー:', error);
+                });
+        });
+    </script>
+}
