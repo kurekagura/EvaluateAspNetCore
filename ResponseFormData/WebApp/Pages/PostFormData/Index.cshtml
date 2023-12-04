@@ -1,0 +1,64 @@
+﻿@page
+@model WebApp.Pages.PostFormData.IndexModel
+@{
+    var handlerUrl = Url.Page(pageName: "/PostFormData/Index", pageHandler: "FormData");
+}
+
+<h2>WebAPIから</h2>
+<button id="IdFormData1">Get FormData from WebAPI</button>
+<img id="IdImg1" />
+
+<h2>HandlerへPOST要求（FormData）、応答（FormData）を得る</h2>
+<button id="IdFormData2">Get FormData from PageHandler</button>
+<img id="IdImg2" />
+
+@section Scripts{
+    <script src="~/js/site.js"></script>
+
+    <script>
+
+        $('#IdFormData1').on('click', function () {
+            getFormDataAsync('@Url.Action("Get","FormData")')
+                .then((data) => {
+                    console.log(data.size);
+                    const blob = new Blob([data.bin], { type: data.contentType });
+                    const imgUrl = URL.createObjectURL(blob);
+                    const imgElement = document.getElementById('IdImg1');
+                    imgElement.src = imgUrl;
+                    imgElement.dataset.mySize = `${data.size.width},${data.size.height}`;
+                }).catch(error => {
+                    console.error('エラー:', error);
+                });
+        });
+
+        $('#IdFormData2').on('click', function () {
+            const imgElem = document.getElementById('IdImg1');
+
+            getBlobFromUrl(imgElem.src, function (blob) {
+                // blobを利用した処理
+                console.log('■blob->', blob);
+
+                var fd = new FormData();
+                fd.append('Key1_string', '文字列1');
+                fd.append('Key2_int', 1);
+                fd.append('Key3_double', 1.1);
+                fd.append('Key4_FormFile', blob);
+                //form-data; name="Key4_FormFile"; filename="blob"
+                //Content-Type: "image/png"
+                //となる
+                postFormDataGetFormDataAsync('@handlerUrl', fd)
+                    .then((data) => {
+                        console.log(data.size);
+                        const blob = new Blob([data.bin], { type: data.contentType });
+                        const imgUrl = URL.createObjectURL(blob);
+                        const imgElement = document.getElementById('IdImg2');
+                        imgElement.src = imgUrl;
+                        imgElement.dataset.mySize = `${data.size.width},${data.size.height}`;
+                    }).catch(error => {
+                        console.error('エラー:', error);
+                    });
+            });
+ 
+        });
+    </script>
+}

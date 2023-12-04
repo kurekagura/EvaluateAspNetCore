@@ -1,0 +1,27 @@
+﻿@page
+@model ImageBlobModel
+@{
+    //string.Format("data:image/"+item.imagetype+";base64,{0}", img64);
+
+    // var binaryData = '@Html.Raw(Json.Serialize(Model.Binary))';
+    // var blob = new Blob([binaryData], { type: 'image/png' });
+    // var objectUrl = URL.createObjectURL(blob);
+    // document.getElementById('IdImg1').src = objectUrl;
+    String img64 = Convert.ToBase64String(Model.Binary);
+    String img64Url = string.Format("data:image/" + "image/png" + ";base64,{0}", img64);
+    //document.getElementById('IdImg1').src = '@img64Url';
+}
+
+<img src="@img64Url" />
+@* <img id="IdImg1"/>*@
+
+@section Scripts{
+
+    <script>
+        $(() => {
+            console.log('loaded');
+
+
+        });
+    </script>
+}
