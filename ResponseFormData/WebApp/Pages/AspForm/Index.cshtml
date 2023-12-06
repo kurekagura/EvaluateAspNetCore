@@ -15,6 +15,7 @@
     //     };
     var aPluginForm = new APluginForm();
     var bPluginForm = new BPluginForm();
+    var cPluginForm = new CPluginForm();
 }
 
 <h4>asp-for</h4>
@@ -35,6 +36,9 @@
 <h5>プラグインB</h5>
 <partial name="_PartialPluginB" model="bPluginForm" />
 
+<h5>プラグインC</h5>
+<partial name="_PartialPluginC" model="cPluginForm" />
+
 <button type="button" id="IdPostBT">type="button"</button>
 
 <img src="" id="IdResponseImg" />
@@ -50,6 +54,10 @@
 
         $(async () => {
 
+            insertPrefixToId($('.my-plugin-a'), 0);
+            insertPrefixToId($('.my-plugin-b'), 1);
+            insertPrefixToId($('.my-plugin-c'), 2);
+
             //↓checkbox問題回避策
             const $form_b = $('.my-plugin-b').find('form:first');
             const checkboxes = $form_b.find('input[type="checkbox"]');
@@ -62,14 +70,19 @@
 
             const blob = await fetchBlobFromUrlAsync('/tensai_vegetable.png');
             const imgElement = document.getElementById('IdImg');
-            imgElement.src = URL.createObjectURL(blob);
+            //imgElement.src = URL.createObjectURL(blob);
+
+            const imageSize = await getImageSizeFromBlob(blob, imgElement);
+            console.log('Width:', imageSize.width, 'Height:', imageSize.height);
 
             $('#IdPostBT').on('click', function () {
                 const $form_a = $('.my-plugin-a').find('form:first');
                 const $form_b = $('.my-plugin-b').find('form:first');
+                const $form_c = $('.my-plugin-c').find('form:first');
 
                 const fd_a = new FormData($form_a.get(0)); //引数はDOM要素
                 const fd_b = new FormData($form_b.get(0));
+                const fd_c = new FormData($form_c.get(0));
                 //deleteUnneededFromFormData(fd_a);
                 //deleteUnneededFromFormData(fd_b);
 
@@ -110,6 +123,11 @@
                 console.log('加工後JSONのformdata-->:');
                 console.log('str_b', jstr_b);
 
+                const jObjc = FormDataJson.toJson($form_c, {
+                    inputFilter: formDataToJsonFilter
+                });
+                const jstr_c = JSON.stringify(jObjc);
+
                 const newFd = new FormData();
                 newFd.append('plugins[0]', 'my-plugin-a:' + jstr_a);
                 //nullやundefindをしていると文字列としてバインドされる。
@@ -117,6 +135,8 @@
                 //newFd.append('plugins[1]', null);
                 newFd.append('plugins[1]', 'my-plugin-b:' + jstr_b);
                 //サーバサイドでjsonデシリアライズ型を判断するため、prefix:を付けておく。
+
+                newFd.append('plugins[2]', 'my-plugin-c:' + jstr_c);
 
                 //console.log(blob);
                 newFd.append('binary', blob);

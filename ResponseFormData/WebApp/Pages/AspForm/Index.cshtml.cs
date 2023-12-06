@@ -53,6 +53,13 @@ public class IndexModel : PageModel
                         BPluginFormInput? deserializedForm = JsonSerializer.Deserialize<BPluginFormInput>(pluginJstr, seriOpts);
                     }
                     continue;
+                case "my-plugin-c":
+                    {
+                        //var seriOpts = new JsonSerializerOptions();
+                        //seriOpts.Converters.Add(new JsonBoolConverter());
+                        CPluginFormInput? deserializedForm = JsonSerializer.Deserialize<CPluginFormInput>(pluginJstr);
+                    }
+                    continue;
             }
         }
 
@@ -82,7 +89,6 @@ public class MyYesNo
 
 public class APluginForm
 {
-    [Display(Name = "選択肢(LOC可)")]
     public SelectList FigureItems { get; set; } = new SelectList(new List<MyFigure>()
         {
             new MyFigure { Value = "circle", Text = "まる" },
@@ -98,6 +104,7 @@ public class APluginForm
     [Display(Name = "1.0-2.0で0.1刻み")]
     public double name_MyDouble { set; get; } = 1.2;
 
+    [Display(Name = "選択肢(LOC可)")]
     public MyFigure name_SelectedFigureItem { set; get; } = default!;
 }
 
@@ -105,6 +112,25 @@ public class BPluginForm
 {
     [Display(Name = "チェックしてください(LOC可)")]
     public bool name_MyCheckbox { set; get; }
+}
+
+public class CPluginForm
+{
+    //[Display(Name = "ラジオボタン(LOC可)")]
+    //public SelectList name_FigureItems { get; set; } = new SelectList(new List<MyFigure>()
+    //{
+    //    new MyFigure { Value = "circle", Text = "まる（label forでクリックできる）" },
+    //    new MyFigure { Value = "rectangle", Text = "四角（label forでクリックできる）" },
+    //    new MyFigure { Value = "triangle", Text = "三角（label forでクリックできる）" }
+    //}, dataValueField: nameof(MyFigure.Value), dataTextField: nameof(MyFigure.Text), selectedValue: "rectangle");
+
+    [Display(Name = "ラジオボタン(LOC可)")]
+    public List<MyFigure> name_FigureItems { get; set; } = new List<MyFigure>()
+    {
+        new MyFigure { Value = "circle", Text = "まる（label forでクリックできる）" },
+        new MyFigure { Value = "rectangle", Text = "四角（label forでクリックできる）" },
+        new MyFigure { Value = "triangle", Text = "三角（label forでクリックできる）" }
+    };
 }
 
 //JSONシリアライズ用
@@ -123,6 +149,11 @@ public class APluginFormInput
 public class BPluginFormInput
 {
     public bool name_MyCheckbox { set; get; }
+}
+
+public class CPluginFormInput
+{
+    public string name_FigureItems { set; get; }
 }
 
 public class JsonIntConverter : JsonConverter<int>

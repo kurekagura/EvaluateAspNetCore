@@ -112,3 +112,40 @@ function formDataToJsonFilter(inputElem) {
     }
     return true;
 }
+
+//function insertPrefixToId($element, prefix) {
+//    $element.find('[id]').each(function () {
+//        var currentId = $(this).attr('id');
+//        var newId = prefix + currentId;
+//        $(this).attr('id', newId);
+//    });
+//}
+
+function insertPrefixToId($element, prefix) {
+    $element.find('[id]').each(function () {
+        var currentId = $(this).attr('id');
+        var newId = prefix + currentId;
+
+        // id属性を新しい値に変更
+        $(this).attr('id', newId);
+
+        // 対応するlabel要素を取得し、for属性を新しい値に変更
+        var $associatedLabel = $('label[for="' + currentId + '"]');
+        $associatedLabel.attr('for', newId);
+    });
+}
+
+async function getImageSizeFromBlob(blob, img) {
+    return new Promise((resolve, reject) => {
+        //const img = new Image();
+        img.onload = function () {
+            resolve({ width: img.width, height: img.height });
+        };
+        img.onerror = function (error) {
+            reject(error);
+        };
+
+        const imgUrl = URL.createObjectURL(blob);
+        img.src = imgUrl;
+    });
+}

@@ -6,7 +6,7 @@
     <form onformchange="formChanged" method="post">
         <p>submitボタンの無いform</p>
         <div>
-            <label asp-for="@Model.FigureItems"></label>
+            <label asp-for="@Model.name_SelectedFigureItem"></label>
             <select asp-for="@Model.name_SelectedFigureItem" asp-items="@Model.FigureItems"></select>
         </div>
         <div>

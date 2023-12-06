@@ -1,0 +1,26 @@
+﻿@model CPluginForm
+@{
+    // idは明示指定
+}
+
+<div class="my-plugin-c" method="post">
+    <form>
+        <span>@Html.DisplayNameFor(m=>m.name_FigureItems)</span>
+        <div>
+            @foreach (var i in Model.name_FigureItems)
+            {
+                if (i.Value == "rectangle")
+                {
+                    <input type="radio" asp-for="name_FigureItems" value="@i.Value" id="@i.Value" checked/>
+                }
+                else
+                {
+                    <input type="radio" asp-for="name_FigureItems" value="@i.Value" id="@i.Value" />
+
+                }
+                <label for="@i.Value">@i.Text</label>
+                <br />
+            }
+        </div>
+    </form>
+</div>
