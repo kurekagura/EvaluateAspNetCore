@@ -50,6 +50,16 @@
 
         $(async () => {
 
+            //↓checkbox問題回避策
+            const $form_b = $('.my-plugin-b').find('form:first');
+            const checkboxes = $form_b.find('input[type="checkbox"]');
+            checkboxes.each(function () {
+                var nameAttr = $(this).attr('name');
+                // input type="hidden"かつ同じname属性を持つ要素を削除
+                $form_b.find('input[type="hidden"][name="' + nameAttr + '"]').remove();
+            });
+            //↑
+
             const blob = await fetchBlobFromUrlAsync('/tensai_vegetable.png');
             const imgElement = document.getElementById('IdImg');
             imgElement.src = URL.createObjectURL(blob);
@@ -67,6 +77,7 @@
                 //     console.log(pair[0] + ': ' + pair[1]);
                 // }
 
+                console.log('生のformdata:');
                 for (var pair of fd_b.entries()) {
                     console.log(pair[0] + ': ' + pair[1]);
                 }
@@ -84,17 +95,19 @@
 
                 const jObja = FormDataJson.toJson($form_a, {
                     inputFilter: formDataToJsonFilter
-                }); // with jQuery
+                });
                 // console.log('jObja', jObja);
                 const jstr_a = JSON.stringify(jObja);
-                console.log('str_a', jstr_a);
+                //console.log('str_a', jstr_a);
 
                 const jObjb = FormDataJson.toJson($form_b, {
                     inputFilter: formDataToJsonFilter,
-                    uncheckedValue: undefined
+                    uncheckedValue: "false"
+                    // arrayify: true
                 }); // with jQuery
                 // console.log('jObjb', jObjb);
                 const jstr_b = JSON.stringify(jObjb);
+                console.log('加工後JSONのformdata-->:');
                 console.log('str_b', jstr_b);
 
                 const newFd = new FormData();
@@ -124,20 +137,6 @@
                 });
             });
         });
-
-                                                        // FormDataにinput要素を直接入れることができる？
-                                                        // $form.submit(function (event) {
-                                                        //     // サブミット時にデータを設定
-                                                        //     for (var key in formData) {
-                                                        //         if (formData.hasOwnProperty(key)) {
-                                                        //             $form.append($('<input>', {
-                                                        //                 type: 'hidden',
-                                                        //                 name: key,
-                                                        //                 value: formData[key]
-                                                        //             }));
-                                                        //         }
-                                                        //     }
-                                                        // });
 
     </script>
 }

@@ -18,30 +18,11 @@ namespace WebApp.Pages.AspForm;
 [IgnoreAntiforgeryToken] //【重要】検証中なので無視
 public class IndexModel : PageModel
 {
-    //[Display(Name = "選択肢")]
-    //public SelectList FigureItems { get; set; }
-
-    //public APluginForm APlugin = new();
-    public BPluginForm BPlugin = new();
-
     private readonly IWebHostEnvironment _env;
 
     public IndexModel(IWebHostEnvironment webHostEnvironment)
     {
         _env = webHostEnvironment;
-
-        //第二引数以降の指定に注目
-        //FigureItems = new SelectList(new List<MyFigure>()
-        //{
-        //    new MyFigure { Value = "circle", Text = "まる" },
-        //    new MyFigure { Value = "rectangle", Text = "四角" }
-        //}, dataValueField: nameof(MyFigure.Value), dataTextField: nameof(MyFigure.Text), selectedValue: "rectangle");
-
-        //APlugin.name_YesNoItems = new(){
-        //    new MyYesNo { id = "yes", caption = "はい" },
-        //    new MyYesNo { id = "no", caption = "いいえ" },
-        //    new MyYesNo { id = "neither", caption = "どっちゃでもない" }
-        //};
     }
 
     public void OnGet()
@@ -60,15 +41,16 @@ public class IndexModel : PageModel
                 case "my-plugin-a":
                     {
                         var seriOpts = new JsonSerializerOptions();
-
-                        seriOpts.Converters.Add(new Int32Converter());
-                        seriOpts.Converters.Add(new DoubleConverter());
+                        seriOpts.Converters.Add(new JsonIntConverter());
+                        seriOpts.Converters.Add(new JsonDoubleConverter());
                         var deserializedForm = JsonSerializer.Deserialize<APluginFormInput>(pluginJstr, seriOpts);
                     }
                     continue;
                 case "my-plugin-b":
                     {
-                        BPluginForm? deserializedForm = JsonSerializer.Deserialize<BPluginForm>(pluginJstr);
+                        var seriOpts = new JsonSerializerOptions();
+                        seriOpts.Converters.Add(new JsonBoolConverter());
+                        BPluginFormInput? deserializedForm = JsonSerializer.Deserialize<BPluginFormInput>(pluginJstr, seriOpts);
                     }
                     continue;
             }
@@ -121,7 +103,7 @@ public class APluginForm
 
 public class BPluginForm
 {
-    [Display(Name = "チェックしてください。")]
+    [Display(Name = "チェックしてください(LOC可)")]
     public bool name_MyCheckbox { set; get; }
 }
 
@@ -138,7 +120,12 @@ public class APluginFormInput
     public string name_SelectedFigureItem { set; get; } = default!;
 }
 
-public class Int32Converter : JsonConverter<int>
+public class BPluginFormInput
+{
+    public bool name_MyCheckbox { set; get; }
+}
+
+public class JsonIntConverter : JsonConverter<int>
 {
     public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -164,7 +151,7 @@ public class Int32Converter : JsonConverter<int>
     }
 }
 
-public class DoubleConverter : JsonConverter<double>
+public class JsonDoubleConverter : JsonConverter<double>
 {
     public override double Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -187,5 +174,31 @@ public class DoubleConverter : JsonConverter<double>
     public override void Write(Utf8JsonWriter writer, double value, JsonSerializerOptions options)
     {
         writer.WriteNumberValue(value);
+    }
+}
+
+public class JsonBoolConverter : JsonConverter<bool>
+{
+    public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            string? stringValue = reader.GetString();
+            if (bool.TryParse(stringValue, out bool value))
+            {
+                return value;
+            }
+        }
+        else if (reader.TokenType == JsonTokenType.Number)
+        {
+            return reader.GetBoolean();
+        }
+
+        throw new System.Text.Json.JsonException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
+    {
+        writer.WriteBooleanValue(value);
     }
 }

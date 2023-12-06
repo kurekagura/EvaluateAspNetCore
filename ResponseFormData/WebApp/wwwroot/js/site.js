@@ -100,7 +100,7 @@ function deleteUnneededFromFormData(fd) {
 
 function formDataToJsonFilter(inputElem) {
     //falseを戻すと対象から外せる
-    if ((inputElem.type === 'hidden')) {
+    if (inputElem.type === 'hidden') {
         switch (inputElem.name) {
             case '__RequestVerificationToken':
             case '__Invariant':
