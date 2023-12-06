@@ -7,12 +7,14 @@
     // var oldCookieTokenAndHeader = Xsrf.GetAndStoreTokens(Context);
     // Xsrf.ClearTokenSet(Context);
 
-    APluginForm APluginForm = new APluginForm();
-    APluginForm.name_YesNoItems = new(){
-            new MyYesNo { id = "yes", caption = "はい" },
-            new MyYesNo { id = "no", caption = "いいえ" },
-            new MyYesNo { id = "neither", caption = "どっちゃでもない" }
-        };
+    // APluginForm APluginForm = new APluginForm();
+    // APluginForm.name_YesNoItems = new(){
+    //         new MyYesNo { id = "yes", caption = "はい" },
+    //         new MyYesNo { id = "no", caption = "いいえ" },
+    //         new MyYesNo { id = "neither", caption = "どっちゃでもない" }
+    //     };
+    var aPluginForm = new APluginForm();
+    var bPluginForm = new BPluginForm();
 }
 
 <h4>asp-for</h4>
@@ -28,40 +30,10 @@
 <img src="" id="IdImg" />
 
 <h5>プラグインA</h5>
-<div class="my-plugin-a">
-    <form onformchange="formChanged" method="post">
-        <p>submitボタンの無いform</p>
-        <div>
-            <label asp-for="FigureItems"></label>
-            @* POST対象にするにはSelectedXXXが必ず必要 *@
-            <select asp-for="@APluginForm.name_SelectedFigureItem" asp-items="@Model.FigureItems"></select>
-        </div>
-        <div>
-            @foreach (var i in APluginForm.name_YesNoItems)
-            {
-                <input type="radio" asp-for="@APluginForm.name_YesNoItems" id="@i.id" value="@i.id" />
-                <label for="@i.id">@i.caption</label>
-                <br />
-            }
-        </div>
-        <div>
-            <label asp-for="@APluginForm.name_MyInteger"></label>
-            <input type="number" min="1" max="5" asp-for="@APluginForm.name_MyInteger" />
-        </div>
-        <div>
-            <label asp-for="@APluginForm.name_MyDouble"></label>
-            <input type="number" min="1.0" max="2.0" step="0.1" asp-for="@APluginForm.name_MyDouble" />
-        </div>
-    </form>
-</div>
+<partial name="_PartialPluginA" model="aPluginForm" />
 
 <h5>プラグインB</h5>
-<div class="my-plugin-b" method="post">
-    <form>
-        <span>要調査：checkboxの挙動（確か何かあった）</span>
-        <div><input type="checkbox" asp-for="BPlugin.name_MyCheckbox" /><label for="@Model.BPlugin.name_MyCheckbox">@Html.DisplayNameFor(m=>m.BPlugin.name_MyCheckbox)</label></div>
-    </form>
-</div>
+<partial name="_PartialPluginB" model="bPluginForm" />
 
 <button type="button" id="IdPostBT">type="button"</button>
 
@@ -69,6 +41,7 @@
 
 @section Scripts{
 
+    <script src="~/lib/form-data-json-convert/dist/form-data-json.min.js"></script>
     <script>
 
         function formChanged() {
@@ -87,19 +60,42 @@
 
                 const fd_a = new FormData($form_a.get(0)); //引数はDOM要素
                 const fd_b = new FormData($form_b.get(0));
-                deleteUnneededFromFormData(fd_a);
-                deleteUnneededFromFormData(fd_b);
+                //deleteUnneededFromFormData(fd_a);
+                //deleteUnneededFromFormData(fd_b);
 
-                for (var pair of fd_a.entries()) {
-                    console.log(pair[0] + ': ' + pair[1]);
-                }
+                // for (var pair of fd_a.entries()) {
+                //     console.log(pair[0] + ': ' + pair[1]);
+                // }
 
                 for (var pair of fd_b.entries()) {
                     console.log(pair[0] + ': ' + pair[1]);
                 }
 
-                const jstr_a = JSON.stringify(Object.fromEntries(fd_a.entries()));
-                const jstr_b = JSON.stringify(Object.fromEntries(fd_b.entries()));
+                //これも値が全てstringになる。
+                // const jstr_a = JSON.stringify(Object.fromEntries(fd_a.entries()));
+                //const jstr_b = JSON.stringify(Object.fromEntries(fd_b.entries()));
+
+                //これも値が全てstringになる。
+                // const jsonObject = {};
+                // fd_a.forEach((value, key) => {
+                //     jsonObject[key] = value;
+                // });
+                // const jstr_a = JSON.stringify(jsonObject);
+
+                const jObja = FormDataJson.toJson($form_a, {
+                    inputFilter: formDataToJsonFilter
+                }); // with jQuery
+                // console.log('jObja', jObja);
+                const jstr_a = JSON.stringify(jObja);
+                console.log('str_a', jstr_a);
+
+                const jObjb = FormDataJson.toJson($form_b, {
+                    inputFilter: formDataToJsonFilter,
+                    uncheckedValue: undefined
+                }); // with jQuery
+                // console.log('jObjb', jObjb);
+                const jstr_b = JSON.stringify(jObjb);
+                console.log('str_b', jstr_b);
 
                 const newFd = new FormData();
                 newFd.append('plugins[0]', 'my-plugin-a:' + jstr_a);
@@ -109,7 +105,7 @@
                 newFd.append('plugins[1]', 'my-plugin-b:' + jstr_b);
                 //サーバサイドでjsonデシリアライズ型を判断するため、prefix:を付けておく。
 
-                console.log(blob);
+                //console.log(blob);
                 newFd.append('binary', blob);
 
                 fetch('@handlerUrl', {
@@ -129,19 +125,19 @@
             });
         });
 
-                        // FormDataにinput要素を直接入れることができる？
-                        // $form.submit(function (event) {
-                        //     // サブミット時にデータを設定
-                        //     for (var key in formData) {
-                        //         if (formData.hasOwnProperty(key)) {
-                        //             $form.append($('<input>', {
-                        //                 type: 'hidden',
-                        //                 name: key,
-                        //                 value: formData[key]
-                        //             }));
-                        //         }
-                        //     }
-                        // });
+                                                        // FormDataにinput要素を直接入れることができる？
+                                                        // $form.submit(function (event) {
+                                                        //     // サブミット時にデータを設定
+                                                        //     for (var key in formData) {
+                                                        //         if (formData.hasOwnProperty(key)) {
+                                                        //             $form.append($('<input>', {
+                                                        //                 type: 'hidden',
+                                                        //                 name: key,
+                                                        //                 value: formData[key]
+                                                        //             }));
+                                                        //         }
+                                                        //     }
+                                                        // });
 
     </script>
 }

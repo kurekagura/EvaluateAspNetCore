@@ -1,0 +1,15 @@
+﻿@model BPluginForm
+@{
+}
+
+<div class="my-plugin-b" method="post">
+    <form>
+        <span>要調査：checkboxの挙動（確か何かあった）</span>
+        <div>
+            @* <input type="checkbox" asp-for="BPlugin.name_MyCheckbox"/> *@
+            @* value未指定だとon が設定される*@
+            <input type="checkbox" id="@Model.name_MyCheckbox)" name="@nameof(Model.name_MyCheckbox)" value="sending_if_checked" />
+            <label for="@Model.name_MyCheckbox)">@Html.DisplayNameFor(m=>m.name_MyCheckbox)</label>
+        </div>
+    </form>
+</div>

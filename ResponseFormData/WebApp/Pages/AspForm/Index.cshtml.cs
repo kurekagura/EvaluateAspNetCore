@@ -18,8 +18,8 @@ namespace WebApp.Pages.AspForm;
 [IgnoreAntiforgeryToken] //【重要】検証中なので無視
 public class IndexModel : PageModel
 {
-    [Display(Name = "選択肢")]
-    public SelectList FigureItems { get; set; }
+    //[Display(Name = "選択肢")]
+    //public SelectList FigureItems { get; set; }
 
     //public APluginForm APlugin = new();
     public BPluginForm BPlugin = new();
@@ -31,11 +31,11 @@ public class IndexModel : PageModel
         _env = webHostEnvironment;
 
         //第二引数以降の指定に注目
-        FigureItems = new SelectList(new List<MyFigure>()
-        {
-            new MyFigure { Value = "circle", Text = "まる" },
-            new MyFigure { Value = "rectangle", Text = "四角" }
-        }, dataValueField: nameof(MyFigure.Value), dataTextField: nameof(MyFigure.Text), selectedValue: "rectangle");
+        //FigureItems = new SelectList(new List<MyFigure>()
+        //{
+        //    new MyFigure { Value = "circle", Text = "まる" },
+        //    new MyFigure { Value = "rectangle", Text = "四角" }
+        //}, dataValueField: nameof(MyFigure.Value), dataTextField: nameof(MyFigure.Text), selectedValue: "rectangle");
 
         //APlugin.name_YesNoItems = new(){
         //    new MyYesNo { id = "yes", caption = "はい" },
@@ -59,7 +59,11 @@ public class IndexModel : PageModel
             {
                 case "my-plugin-a":
                     {
-                        APluginForm? deserializedForm = JsonSerializer.Deserialize<APluginForm>(pluginJstr);
+                        var seriOpts = new JsonSerializerOptions();
+
+                        seriOpts.Converters.Add(new Int32Converter());
+                        seriOpts.Converters.Add(new DoubleConverter());
+                        var deserializedForm = JsonSerializer.Deserialize<APluginFormInput>(pluginJstr, seriOpts);
                     }
                     continue;
                 case "my-plugin-b":
@@ -96,6 +100,13 @@ public class MyYesNo
 
 public class APluginForm
 {
+    [Display(Name = "選択肢(LOC可)")]
+    public SelectList FigureItems { get; set; } = new SelectList(new List<MyFigure>()
+        {
+            new MyFigure { Value = "circle", Text = "まる" },
+            new MyFigure { Value = "rectangle", Text = "四角" }
+        }, dataValueField: nameof(MyFigure.Value), dataTextField: nameof(MyFigure.Text), selectedValue: "rectangle");
+
     [Display(Name = "はい・いいえ")]
     public List<MyYesNo> name_YesNoItems = new();
 
@@ -114,14 +125,67 @@ public class BPluginForm
     public bool name_MyCheckbox { set; get; }
 }
 
-//public class APluginFormData
-//{
-//    [JsonPropertyName("APluginForm.name_YesNoItems")]
-//    public string name_YesNoItems { set; get; } = default!;
-//    [JsonPropertyName("APluginForm.name_MyInteger")]
-//    public int name_MyInteger { set; get; }
-//    [JsonPropertyName("APluginForm.name_MyDouble")]
-//    public double name_MyDouble { set; get; }
-//    [JsonPropertyName("APluginForm.name_SelectedFigureItem")]
-//    public string name_SelectedFigureItem { set; get; } = default!;
-//}
+//JSONシリアライズ用
+public class APluginFormInput
+{
+    //[JsonPropertyName("APluginForm.name_YesNoItems")]
+    public string name_YesNoItems { set; get; } = default!;
+    //[JsonPropertyName("APluginForm.name_MyInteger")]
+    public int name_MyInteger { set; get; }
+    //[JsonPropertyName("APluginForm.name_MyDouble")]
+    public double name_MyDouble { set; get; }
+    //[JsonPropertyName("APluginForm.name_SelectedFigureItem")]
+    public string name_SelectedFigureItem { set; get; } = default!;
+}
+
+public class Int32Converter : JsonConverter<int>
+{
+    public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            string? stringValue = reader.GetString();
+            if (int.TryParse(stringValue, out int value))
+            {
+                return value;
+            }
+        }
+        else if (reader.TokenType == JsonTokenType.Number)
+        {
+            return reader.GetInt32();
+        }
+
+        throw new System.Text.Json.JsonException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+    {
+        writer.WriteNumberValue(value);
+    }
+}
+
+public class DoubleConverter : JsonConverter<double>
+{
+    public override double Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            string? stringValue = reader.GetString();
+            if (double.TryParse(stringValue, out double value))
+            {
+                return value;
+            }
+        }
+        else if (reader.TokenType == JsonTokenType.Number)
+        {
+            return reader.GetDouble();
+        }
+
+        throw new System.Text.Json.JsonException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, double value, JsonSerializerOptions options)
+    {
+        writer.WriteNumberValue(value);
+    }
+}
