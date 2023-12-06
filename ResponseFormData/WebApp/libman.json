@@ -82,6 +82,16 @@
         "dist/jquery.validate.unobtrusive.js",
         "dist/jquery.validate.unobtrusive.min.js"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "form-data-json-convert@2.2.1",
+      "destination": "wwwroot/lib/form-data-json-convert/",
+      "files": [
+        "dist/form-data-json.js",
+        "dist/form-data-json.min.js",
+        "LICENSE"
+      ]
     }
   ]
 }
