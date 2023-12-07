@@ -1,0 +1,20 @@
+﻿@page
+@model WebApp.Pages.Enum.IndexModel
+@{
+}
+
+<h4>DisplayNameForとDisplayTextForの用法</h4>
+<span>@Html.DisplayNameFor(m=>m.ILikeSeason)</span><span>@Html.DisplayTextFor(m=>m.ILikeSeason)</span>
+
+<br />
+<h4>ラジオボタン</h4>
+<form>
+    <div>
+        @foreach (EnumSeason s in Model.name_SeasonItems)
+        {
+            <input type="radio" asp-for="name_SeasonItems" value="@s.ToString()" id="@s.ToString()" />
+            <label asp="@s.ToString()">@Html.DisplayTextFor(m=>@s)</label>
+            <br />
+        }
+    </div>
+</form>
