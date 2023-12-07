@@ -2,7 +2,7 @@
 @{
 }
 
-<div class="my-plugin-a">
+<div class="@EnumMyPlugin.PluginA">
     <form onformchange="formChanged" method="post">
         <p>submitボタンの無いform</p>
         <div>
@@ -12,8 +12,8 @@
         <div>
             @foreach (var i in Model.name_YesNoItems)
             {
-                <input type="radio" asp-for="@Model.name_YesNoItems" id="@i.id" value="@i.id" />
-                <label for="@i.id">@i.caption</label>
+                <input type="radio" asp-for="@Model.name_YesNoItems" id="@i.Value" value="@i.Value" />
+                <label for="@i.Value">@i.LabelText</label>
                 <br />
             }
         </div>

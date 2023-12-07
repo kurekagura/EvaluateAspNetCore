@@ -1,17 +1,9 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Net.Mime;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using WebApp.Mvc;
-using WebApp.Net.Http;
-using IO = System.IO;
 
 namespace WebApp.Pages.AspForm;
 
@@ -64,26 +56,29 @@ public class IndexModel : PageModel
         //    }
         //}
 
-        var deserialized = JsonSerializer.Deserialize<List<KeyValuePair<string, JsonElement>>>(plugins);
+        var deserialized = JsonSerializer.Deserialize<List<KeyValuePair<string, JsonElement>>>(plugins)!;
         foreach (var i in deserialized)
         {
-            if (i.Key == "my-plugin-a")
+            if (i.Key == nameof(EnumMyPlugin.PluginA))
             {
                 var seriOpts = new JsonSerializerOptions();
                 seriOpts.Converters.Add(new JsonIntConverter());
                 seriOpts.Converters.Add(new JsonDoubleConverter());
+                seriOpts.Converters.Add(new JsonEnumFigureConverter());
+                seriOpts.Converters.Add(new JsonEnumYesNoConverter());
                 var a = JsonSerializer.Deserialize<APluginFormInput>(i.Value, seriOpts);
             }
-            else if (i.Key == "my-plugin-b")
+            else if (i.Key == nameof(EnumMyPlugin.PluginB))
             {
                 var seriOpts = new JsonSerializerOptions();
                 seriOpts.Converters.Add(new JsonBoolConverter());
                 var b = JsonSerializer.Deserialize<BPluginFormInput>(i.Value, seriOpts);
             }
-            else if (i.Key == "my-plugin-c")
+            else if (i.Key == nameof(EnumMyPlugin.PluginC))
             {
                 var seriOpts = new JsonSerializerOptions();
                 seriOpts.Converters.Add(new JsonBoolConverter());
+                seriOpts.Converters.Add(new JsonEnumFigureConverter());
                 var c = JsonSerializer.Deserialize<CPluginFormInput>(i.Value, seriOpts);
             }
         }
@@ -100,28 +95,52 @@ public class IndexModel : PageModel
     }
 }
 
-public class MyFigure
+public enum EnumMyPlugin
 {
-    public string Value { get; set; } = default!;
+    PluginA,
+    PluginB,
+    PluginC
+}
+
+public class MyFigureOption
+{
+    public ENumFigure Value { get; set; } = default!;
     public string Text { get; set; } = default!;
+}
+
+public enum ENumFigure
+{
+    Rectangle,
+    Circle,
+    Triangle
 }
 
 public class MyYesNo
 {
-    public string id { get; set; } = default!;
-    public string caption { set; get; } = default!;
+    public EnumYesNo Value { get; set; } = default!;
+    public string LabelText { set; get; } = default!;
+}
+
+public enum EnumYesNo
+{
+    Yes,
+    No
 }
 
 public class APluginForm
 {
-    public SelectList FigureItems { get; set; } = new SelectList(new List<MyFigure>()
+    //select要素では.NETのSelectListを利用できる。
+    public SelectList FigureItems { get; set; } = new SelectList(new List<MyFigureOption>()
         {
-            new MyFigure { Value = "circle", Text = "まる" },
-            new MyFigure { Value = "rectangle", Text = "四角" }
-        }, dataValueField: nameof(MyFigure.Value), dataTextField: nameof(MyFigure.Text), selectedValue: "rectangle");
+            new MyFigureOption { Value = ENumFigure.Circle, Text = "まる" },
+            new MyFigureOption { Value = ENumFigure.Rectangle, Text = "四角" }
+        }, dataValueField: nameof(MyFigureOption.Value), dataTextField: nameof(MyFigureOption.Text), selectedValue: ENumFigure.Rectangle);
 
-    [Display(Name = "はい・いいえ")]
-    public List<MyYesNo> name_YesNoItems = new();
+    [Display(Name = "はい・いいえ(LOC可)")]
+    public List<MyYesNo> name_YesNoItems = new() {
+        new MyYesNo(){Value = EnumYesNo.Yes, LabelText ="よいです"},
+        new MyYesNo(){Value = EnumYesNo.No, LabelText ="いやです"}
+    };
 
     [Display(Name = "1-5の入力")]
     public int name_MyInteger { set; get; } = 2; //label asp-for対応するにはpropが必須
@@ -130,7 +149,7 @@ public class APluginForm
     public double name_MyDouble { set; get; } = 1.2;
 
     [Display(Name = "選択肢(LOC可)")]
-    public MyFigure name_SelectedFigureItem { set; get; } = default!;
+    public ENumFigure name_SelectedFigureItem { set; get; } = default!;
 }
 
 public class BPluginForm
@@ -150,25 +169,22 @@ public class CPluginForm
     //}, dataValueField: nameof(MyFigure.Value), dataTextField: nameof(MyFigure.Text), selectedValue: "rectangle");
 
     [Display(Name = "ラジオボタン(LOC可)")]
-    public List<MyFigure> name_FigureItems { get; set; } = new List<MyFigure>()
+    public List<MyFigureOption> name_FigureItems { get; set; } = new List<MyFigureOption>()
     {
-        new MyFigure { Value = "circle", Text = "まる（label forでクリックできる）" },
-        new MyFigure { Value = "rectangle", Text = "四角（label forでクリックできる）" },
-        new MyFigure { Value = "triangle", Text = "三角（label forでクリックできる）" }
+        new MyFigureOption { Value = ENumFigure.Circle, Text = "まる（label forでクリックできる）" },
+        new MyFigureOption { Value = ENumFigure.Rectangle, Text = "四角（label forでクリックできる）" },
+        new MyFigureOption { Value = ENumFigure.Triangle, Text = "三角（label forでクリックできる）" }
     };
 }
 
 //JSONシリアライズ用
 public class APluginFormInput
 {
-    //[JsonPropertyName("APluginForm.name_YesNoItems")]
-    public string name_YesNoItems { set; get; } = default!;
-    //[JsonPropertyName("APluginForm.name_MyInteger")]
+    //ラジオの未選択を許可したい場合、Nullableにしておく必要がある
+    public EnumYesNo? name_YesNoItems { set; get; } = default!;
     public int name_MyInteger { set; get; }
-    //[JsonPropertyName("APluginForm.name_MyDouble")]
     public double name_MyDouble { set; get; }
-    //[JsonPropertyName("APluginForm.name_SelectedFigureItem")]
-    public string name_SelectedFigureItem { set; get; } = default!;
+    public ENumFigure name_SelectedFigureItem { set; get; } = default!;
 }
 
 public class BPluginFormInput
@@ -178,7 +194,7 @@ public class BPluginFormInput
 
 public class CPluginFormInput
 {
-    public string name_FigureItems { set; get; }
+    public ENumFigure name_FigureItems { set; get; }
 }
 
 public class JsonIntConverter : JsonConverter<int>
@@ -256,5 +272,49 @@ public class JsonBoolConverter : JsonConverter<bool>
     public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
     {
         writer.WriteBooleanValue(value);
+    }
+}
+
+public class JsonEnumFigureConverter : JsonConverter<ENumFigure>
+{
+    public override ENumFigure Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            string? stringValue = reader.GetString();
+            if (ENumFigure.TryParse(stringValue, out ENumFigure value))
+            {
+                return value;
+            }
+        }
+
+        throw new System.Text.Json.JsonException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, ENumFigure value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToString());
+    }
+}
+
+public class JsonEnumYesNoConverter : JsonConverter<EnumYesNo>
+{
+    public override EnumYesNo Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            string? stringValue = reader.GetString();
+            if (EnumYesNo.TryParse(stringValue, out EnumYesNo value))
+            {
+                return value;
+            }
+        }
+
+        throw new System.Text.Json.JsonException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, EnumYesNo value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToString());
     }
 }

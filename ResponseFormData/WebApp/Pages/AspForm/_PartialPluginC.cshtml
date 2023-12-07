@@ -3,13 +3,13 @@
     // idは明示指定
 }
 
-<div class="my-plugin-c" method="post">
+<div class="@EnumMyPlugin.PluginC" method="post">
     <form>
         <span>@Html.DisplayNameFor(m=>m.name_FigureItems)</span>
         <div>
             @foreach (var i in Model.name_FigureItems)
             {
-                if (i.Value == "rectangle")
+                if (i.Value == ENumFigure.Rectangle)
                 {
                     <input type="radio" asp-for="name_FigureItems" value="@i.Value" id="@i.Value" checked/>
                 }

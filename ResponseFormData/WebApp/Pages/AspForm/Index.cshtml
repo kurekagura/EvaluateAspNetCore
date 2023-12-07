@@ -54,12 +54,12 @@
 
         $(async () => {
 
-            insertPrefixToId($('.my-plugin-a'), 0);
-            insertPrefixToId($('.my-plugin-b'), 1);
-            insertPrefixToId($('.my-plugin-c'), 2);
+            insertPrefixToId($('.@EnumMyPlugin.PluginA'), 0);
+            insertPrefixToId($('.@EnumMyPlugin.PluginB'), 1);
+            insertPrefixToId($('.@EnumMyPlugin.PluginC'), 2);
 
             //↓checkbox問題回避策
-            const $form_b = $('.my-plugin-b').find('form:first');
+            const $form_b = $('.@EnumMyPlugin.PluginB').find('form:first');
             const checkboxes = $form_b.find('input[type="checkbox"]');
             checkboxes.each(function () {
                 var nameAttr = $(this).attr('name');
@@ -76,9 +76,9 @@
             console.log('Width:', imageSize.width, 'Height:', imageSize.height);
 
             $('#IdPostBT').on('click', function () {
-                const $form_a = $('.my-plugin-a').find('form:first');
-                const $form_b = $('.my-plugin-b').find('form:first');
-                const $form_c = $('.my-plugin-c').find('form:first');
+                const $form_a = $('.@EnumMyPlugin.PluginA').find('form:first');
+                const $form_b = $('.@EnumMyPlugin.PluginB').find('form:first');
+                const $form_c = $('.@EnumMyPlugin.PluginC').find('form:first');
 
                 const fd_a = new FormData($form_a.get(0)); //引数はDOM要素
                 const fd_b = new FormData($form_b.get(0));
@@ -128,9 +128,9 @@
 
                 //一つのバウンダリーで送信する方法
                 const array = [];
-                array.push({ Key: "my-plugin-a", Value: jObja });
-                array.push({ Key: "my-plugin-b", Value: jObjb });
-                array.push({ Key: "my-plugin-c", Value: jObjc });
+                array.push({ Key: "@EnumMyPlugin.PluginA", Value: jObja });
+                array.push({ Key: "@EnumMyPlugin.PluginB", Value: jObjb });
+                array.push({ Key: "@EnumMyPlugin.PluginC", Value: jObjc });
                 newFd.append('plugins', JSON.stringify(array));
                 //C#側で以下デシリアライズ
                 //JsonSerializer.Deserialize<List<KeyValuePair<string, JsonElement>>>(plugins);
