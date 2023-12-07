@@ -29,37 +29,62 @@ public class IndexModel : PageModel
     {
     }
 
-    public async Task<IActionResult> OnPostFormDataAsync(List<string> plugins, IFormFile binary)
+    //public async Task<IActionResult> OnPostFormDataAsync(List<KeyValuePair<string, JsonElement>> plugins, IFormFile binary)
+    public async Task<IActionResult> OnPostFormDataAsync(string plugins, IFormFile binary)
     {
-        foreach (var p in plugins)
+        //foreach (var p in plugins)
+        //{
+        //    var sp = p.Split(':', 2);
+        //    var plugin = sp[0];
+        //    string pluginJstr = sp[1];
+        //    switch (plugin)
+        //    {
+        //        case "my-plugin-a":
+        //            {
+        //                var seriOpts = new JsonSerializerOptions();
+        //                seriOpts.Converters.Add(new JsonIntConverter());
+        //                seriOpts.Converters.Add(new JsonDoubleConverter());
+        //                var deserializedForm = JsonSerializer.Deserialize<APluginFormInput>(pluginJstr, seriOpts);
+        //            }
+        //            continue;
+        //        case "my-plugin-b":
+        //            {
+        //                var seriOpts = new JsonSerializerOptions();
+        //                seriOpts.Converters.Add(new JsonBoolConverter());
+        //                BPluginFormInput? deserializedForm = JsonSerializer.Deserialize<BPluginFormInput>(pluginJstr, seriOpts);
+        //            }
+        //            continue;
+        //        case "my-plugin-c":
+        //            {
+        //                //var seriOpts = new JsonSerializerOptions();
+        //                //seriOpts.Converters.Add(new JsonBoolConverter());
+        //                CPluginFormInput? deserializedForm = JsonSerializer.Deserialize<CPluginFormInput>(pluginJstr);
+        //            }
+        //            continue;
+        //    }
+        //}
+
+        var deserialized = JsonSerializer.Deserialize<List<KeyValuePair<string, JsonElement>>>(plugins);
+        foreach (var i in deserialized)
         {
-            var sp = p.Split(':', 2);
-            var plugin = sp[0];
-            string pluginJstr = sp[1];
-            switch (plugin)
+            if (i.Key == "my-plugin-a")
             {
-                case "my-plugin-a":
-                    {
-                        var seriOpts = new JsonSerializerOptions();
-                        seriOpts.Converters.Add(new JsonIntConverter());
-                        seriOpts.Converters.Add(new JsonDoubleConverter());
-                        var deserializedForm = JsonSerializer.Deserialize<APluginFormInput>(pluginJstr, seriOpts);
-                    }
-                    continue;
-                case "my-plugin-b":
-                    {
-                        var seriOpts = new JsonSerializerOptions();
-                        seriOpts.Converters.Add(new JsonBoolConverter());
-                        BPluginFormInput? deserializedForm = JsonSerializer.Deserialize<BPluginFormInput>(pluginJstr, seriOpts);
-                    }
-                    continue;
-                case "my-plugin-c":
-                    {
-                        //var seriOpts = new JsonSerializerOptions();
-                        //seriOpts.Converters.Add(new JsonBoolConverter());
-                        CPluginFormInput? deserializedForm = JsonSerializer.Deserialize<CPluginFormInput>(pluginJstr);
-                    }
-                    continue;
+                var seriOpts = new JsonSerializerOptions();
+                seriOpts.Converters.Add(new JsonIntConverter());
+                seriOpts.Converters.Add(new JsonDoubleConverter());
+                var a = JsonSerializer.Deserialize<APluginFormInput>(i.Value, seriOpts);
+            }
+            else if (i.Key == "my-plugin-b")
+            {
+                var seriOpts = new JsonSerializerOptions();
+                seriOpts.Converters.Add(new JsonBoolConverter());
+                var b = JsonSerializer.Deserialize<BPluginFormInput>(i.Value, seriOpts);
+            }
+            else if (i.Key == "my-plugin-c")
+            {
+                var seriOpts = new JsonSerializerOptions();
+                seriOpts.Converters.Add(new JsonBoolConverter());
+                var c = JsonSerializer.Deserialize<CPluginFormInput>(i.Value, seriOpts);
             }
         }
 

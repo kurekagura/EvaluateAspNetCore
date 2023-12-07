@@ -108,37 +108,33 @@
 
                 const jObja = FormDataJson.toJson($form_a, {
                     inputFilter: formDataToJsonFilter
-                });
-                // console.log('jObja', jObja);
-                const jstr_a = JSON.stringify(jObja);
-                //console.log('str_a', jstr_a);
-
+                });                
                 const jObjb = FormDataJson.toJson($form_b, {
                     inputFilter: formDataToJsonFilter,
                     uncheckedValue: "false"
-                    // arrayify: true
-                }); // with jQuery
-                // console.log('jObjb', jObjb);
-                const jstr_b = JSON.stringify(jObjb);
-                console.log('加工後JSONのformdata-->:');
-                console.log('str_b', jstr_b);
-
+                });
                 const jObjc = FormDataJson.toJson($form_c, {
                     inputFilter: formDataToJsonFilter
                 });
-                const jstr_c = JSON.stringify(jObjc);
-
                 const newFd = new FormData();
-                newFd.append('plugins[0]', 'my-plugin-a:' + jstr_a);
-                //nullやundefindをしていると文字列としてバインドされる。
-                //またindexを飛ばすと以降のindexはバインドされないので注意。
-                //newFd.append('plugins[1]', null);
-                newFd.append('plugins[1]', 'my-plugin-b:' + jstr_b);
-                //サーバサイドでjsonデシリアライズ型を判断するため、prefix:を付けておく。
+                //バウンダリーで分割して送信する方法
+                // const jstr_a = JSON.stringify(jObja);
+                // const jstr_b = JSON.stringify(jObjb);
+                // const jstr_c = JSON.stringify(jObjc);
 
-                newFd.append('plugins[2]', 'my-plugin-c:' + jstr_c);
+                // newFd.append('plugins[0]', 'my-plugin-a:' + jstr_a);
+                // newFd.append('plugins[1]', 'my-plugin-b:' + jstr_b);
+                // newFd.append('plugins[2]', 'my-plugin-c:' + jstr_c);
 
-                //console.log(blob);
+                //一つのバウンダリーで送信する方法
+                const array = [];
+                array.push({ Key: "my-plugin-a", Value: jObja });
+                array.push({ Key: "my-plugin-b", Value: jObjb });
+                array.push({ Key: "my-plugin-c", Value: jObjc });
+                newFd.append('plugins', JSON.stringify(array));
+                //C#側で以下デシリアライズ
+                //JsonSerializer.Deserialize<List<KeyValuePair<string, JsonElement>>>(plugins);
+
                 newFd.append('binary', blob);
 
                 fetch('@handlerUrl', {
