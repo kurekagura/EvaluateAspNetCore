@@ -5,16 +5,21 @@
 
 <h4>DisplayNameForとDisplayTextForの用法</h4>
 <span>@Html.DisplayNameFor(m=>m.ILikeSeason)</span><span>@Html.DisplayTextFor(m=>m.ILikeSeason)</span>
-
 <br />
+
 <h4>ラジオボタン</h4>
 <form>
-    <div>
-        @foreach (EnumSeason s in Model.name_SeasonItems)
-        {
-            <input type="radio" asp-for="name_SeasonItems" value="@s.ToString()" id="@s.ToString()" />
-            <label for="@s.ToString()">@Html.DisplayTextFor(m=>@s)</label>
-            <br />
-        }
-    </div>
+    @foreach (EnumSeason s in Model.name_RadioSeasonItems)
+    {
+        <input type="radio" asp-for="name_RadioSeasonItems" value="@s.ToString()" id="@s.ToString()" />
+        <label for="@s.ToString()">@Html.DisplayTextFor(m=>@s)</label>
+        <br />
+    }
+</form>
+<br />
+
+<h4>select要素</h4>
+<form>
+    <label asp-for="@Model.name_SelectedSelectSeasonItem"></label>
+    <select asp-for="@Model.name_SelectedSelectSeasonItem" asp-items="@Model.SelectSeasonItems"></select>
 </form>
