@@ -18,8 +18,14 @@
 </form>
 <br />
 
-<h4>select要素</h4>
+<h4>select要素（Tuple使えば型定義不要）</h4>
 <form>
     <label asp-for="@Model.name_SelectedSelectSeasonItem"></label>
     <select asp-for="@Model.name_SelectedSelectSeasonItem" asp-items="@Model.SelectSeasonItems"></select>
+</form>
+
+<h4>select要素（改）</h4>
+<form>
+    <label asp-for="@Model.SelectSeasonItems2"></label>
+    <select id="@nameof(Model.SelectSeasonItems2)" asp-items="@Model.SelectSeasonItems2"></select>
 </form>
