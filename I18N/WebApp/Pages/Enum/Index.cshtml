@@ -13,7 +13,7 @@
         @foreach (EnumSeason s in Model.name_SeasonItems)
         {
             <input type="radio" asp-for="name_SeasonItems" value="@s.ToString()" id="@s.ToString()" />
-            <label asp="@s.ToString()">@Html.DisplayTextFor(m=>@s)</label>
+            <label for="@s.ToString()">@Html.DisplayTextFor(m=>@s)</label>
             <br />
         }
     </div>
