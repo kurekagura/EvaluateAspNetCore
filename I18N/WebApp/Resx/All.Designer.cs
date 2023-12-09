@@ -61,6 +61,15 @@ namespace WebApp.Resx {
         }
         
         /// <summary>
+        ///   Register に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string BUTTON_REGISTER {
+            get {
+                return ResourceManager.GetString("BUTTON REGISTER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Autumn に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ESEASON_AUTUMN {
