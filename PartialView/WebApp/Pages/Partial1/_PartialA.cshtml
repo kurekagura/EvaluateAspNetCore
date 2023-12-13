@@ -1,0 +1,22 @@
+﻿@using WebApp
+@{
+
+}
+
+<h2>これはパーシャルビュー(_PartialA.chtml)です。</h2>
+
+
+
+<script>
+    console.log('部分ビュー。$()などのjQueryはまだ使えない');
+    
+    // document.addEventListener('DOMContentLoaded', onLoadHandler);
+    // こっちが確実？
+    window.addEventListener('load', onLoadHandler);
+
+    function onLoadHandler() {
+        console.log('部分ビュー。windowのloadイベント');
+
+        window.removeEventListener('load', onLoadHandler);
+    }
+</script>
