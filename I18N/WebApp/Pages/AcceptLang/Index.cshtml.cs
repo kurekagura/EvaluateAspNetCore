@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Configuration;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
@@ -21,7 +18,7 @@ namespace WebApp.Pages.AcceptLang
         private readonly CultureInfo _NeutralCulture = new("en");
 
         [Display(Name = "DetermineProviderCultureResultの結果")]
-        public List<string> DeterminedResult { set; get; } = default!;
+        public List<string> DeterminedResult { set; get; } = new();
 
         public IndexModel(IConfiguration configuration)
         {
@@ -51,8 +48,10 @@ namespace WebApp.Pages.AcceptLang
             }
 
             //確認用
-            DeterminedResult = cultureResult?.UICultures.Select(i => i.Value).ToList();
-
+            if (cultureResult != null)
+            {
+                DeterminedResult.AddRange(cultureResult.UICultures.Where(r => r.Value != null).Select(r => r.Value!));
+            }
             //select要素では.NETのSelectListを利用できる。
             //Accept-Languageのプライマリ言語で表示名をローカライズする。
             SupportedUICultureSelectedItems = new SelectList(
