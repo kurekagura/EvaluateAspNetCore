@@ -20,6 +20,9 @@ namespace WebApp.Pages.AcceptLang
         private readonly List<CultureInfo> _SupportedUICultures;
         private readonly CultureInfo _NeutralCulture = new("en");
 
+        [Display(Name = "DetermineProviderCultureResultの結果")]
+        public List<string> DeterminedResult { set; get; } = default!;
+
         public IndexModel(IConfiguration configuration)
         {
             _config = configuration;
@@ -46,6 +49,9 @@ namespace WebApp.Pages.AcceptLang
             {
                 acceptLangPrimary = _NeutralCulture; //存在しない場合の既定
             }
+
+            //確認用
+            DeterminedResult = cultureResult?.UICultures.Select(i => i.Value).ToList();
 
             //select要素では.NETのSelectListを利用できる。
             //Accept-Languageのプライマリ言語で表示名をローカライズする。

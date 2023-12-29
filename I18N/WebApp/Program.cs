@@ -28,11 +28,19 @@ namespace WebApp
 
             var reqLocOpts = new RequestLocalizationOptions
             {
-                RequestCultureProviders = new[] { new AcceptLanguageHeaderRequestCultureProvider() },
+                RequestCultureProviders = new IRequestCultureProvider[] {
+                    new CookieRequestCultureProvider(),
+                    new AcceptLanguageHeaderRequestCultureProvider()
+                },
                 DefaultRequestCulture = new RequestCulture(""),
                 //SupportedCultures = supportedCultures,Å@// Formatting numbers, dates, etc.
                 SupportedUICultures = supportedCulturesÅ@// UI strings that we have localized.
             };
+
+            //var reqLocOpts = new RequestLocalizationOptions();
+            //[0]: { Microsoft.AspNetCore.Localization.QueryStringRequestCultureProvider}
+            //[1]: { Microsoft.AspNetCore.Localization.CookieRequestCultureProvider}
+            //[2]: { Microsoft.AspNetCore.Localization.AcceptLanguageHeaderRequestCultureProvider}
             app.UseRequestLocalization(reqLocOpts);
 
             // Configure the HTTP request pipeline.

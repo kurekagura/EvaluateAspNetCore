@@ -10,9 +10,17 @@
 
 @Html.Raw(All.PAGE_H_ACCEPTLANG)
 
-<h1>Accept-Language Header: @acceptLanguageHeader</h1>
+<h2>Accept-Language Header: @acceptLanguageHeader</h2>
 
-<h4>Accept-Languageから最適な言語をデフォルト選択した状態</h4>
+<h2>@Html.DisplayNameFor(m=>m.DeterminedResult)</h2>
+<ul>
+    @foreach (var item in Model.DeterminedResult)
+    {
+        <li>@item</li>
+    }
+</ul>
+
+<h2>Accept-Languageから最適な言語をデフォルト選択した状態</h2>
 <form>
     <label asp-for="@Model.SelectedUICultureValue"></label>
     <select asp-for="@Model.SelectedUICultureValue" asp-items="@Model.SupportedUICultureSelectedItems"></select>
