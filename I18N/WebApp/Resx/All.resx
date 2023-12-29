@@ -135,6 +135,9 @@
   <data name="PAGE_ENUM_ILIKESEASON" xml:space="preserve">
     <value>I like season:</value>
   </data>
+  <data name="PAGE_H_ACCEPTLANG" xml:space="preserve">
+    <value>&lt;h2&gt;Validation of Accept-Language&lt;/h2&gt;</value>
+  </data>
   <data name="PAGE_TITLE_ENUM" xml:space="preserve">
     <value>Enum Test</value>
   </data>

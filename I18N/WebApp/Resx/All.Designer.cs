@@ -115,6 +115,15 @@ namespace WebApp.Resx {
         }
         
         /// <summary>
+        ///   &lt;h2&gt;Validation of Accept-Language&lt;/h2&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PAGE_H_ACCEPTLANG {
+            get {
+                return ResourceManager.GetString("PAGE_H_ACCEPTLANG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Enum Test に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PAGE_TITLE_ENUM {

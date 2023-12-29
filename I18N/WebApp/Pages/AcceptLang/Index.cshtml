@@ -1,0 +1,31 @@
+﻿@page
+@model WebApp.Pages.AcceptLang.IndexModel
+@using WebApp.Resx
+@{
+    // var acceptLanguageHeader = Context.Request.Headers["Accept-Language"];
+    var acceptLanguageHeader = PageContext.HttpContext.Request.Headers["Accept-Language"];
+}
+
+<h1>Accept-Languageの検証</h1>
+
+@Html.Raw(All.PAGE_H_ACCEPTLANG)
+
+<h1>Accept-Language Header: @acceptLanguageHeader</h1>
+
+<h4>Accept-Languageから最適な言語をデフォルト選択した状態</h4>
+<form>
+    <label asp-for="@Model.SelectedUICultureValue"></label>
+    <select asp-for="@Model.SelectedUICultureValue" asp-items="@Model.SupportedUICultureSelectedItems"></select>
+</form>
+
+@section Scripts{
+
+    <script>
+        $(() => {
+            console.log('load');
+
+            const userLanguage = navigator.language || navigator.userLanguage;
+            console.log(userLanguage);
+        });
+    </script>
+}
