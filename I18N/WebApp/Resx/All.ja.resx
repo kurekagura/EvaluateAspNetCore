@@ -132,6 +132,9 @@
   <data name="ESEASON_WINTER" xml:space="preserve">
     <value>冬</value>
   </data>
+  <data name="LANGUAGE_SELECTS" xml:space="preserve">
+    <value>言語選択</value>
+  </data>
   <data name="PAGE_ENUM_ILIKESEASON" xml:space="preserve">
     <value>私の好きな季節：</value>
   </data>

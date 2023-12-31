@@ -11,7 +11,7 @@ namespace WebApp.Pages.AcceptLang
         private readonly IConfiguration _config;
 
         public SelectList SupportedUICultureSelectedItems { get; set; } = default!;
-        [Display(Name = "Œ¾Œê‘I‘ğiDisplay‘®«j")]
+        [Display(Name = "LANGUAGE_SELECTS")]
         public string SelectedUICultureValue { set; get; }
 
         private readonly List<CultureInfo> _SupportedUICultures;

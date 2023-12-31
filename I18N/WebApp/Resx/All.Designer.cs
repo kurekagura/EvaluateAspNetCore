@@ -106,6 +106,15 @@ namespace WebApp.Resx {
         }
         
         /// <summary>
+        ///   Language に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LANGUAGE_SELECTS {
+            get {
+                return ResourceManager.GetString("LANGUAGE_SELECTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   I like season: に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PAGE_ENUM_ILIKESEASON {

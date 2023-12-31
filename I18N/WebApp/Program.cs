@@ -29,7 +29,9 @@ namespace WebApp
             var reqLocOpts = new RequestLocalizationOptions
             {
                 RequestCultureProviders = new IRequestCultureProvider[] {
-                    new CookieRequestCultureProvider(),
+                    //クッキー:.AspNetCore.Culture
+                    //フォーマット:c=<カルチャーコード>|uic=<カルチャーコード>
+                    new CookieRequestCultureProvider{CookieName = "lang"},
                     new AcceptLanguageHeaderRequestCultureProvider()
                 },
                 DefaultRequestCulture = new RequestCulture(""),

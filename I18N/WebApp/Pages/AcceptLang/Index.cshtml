@@ -6,7 +6,9 @@
     var acceptLanguageHeader = PageContext.HttpContext.Request.Headers["Accept-Language"];
 }
 
-<h1>Accept-Languageの検証</h1>
+<h1>Accept-Languageの検証(未LOC)</h1>
+
+<h2>以下はLOC済み</h2>
 
 @Html.Raw(All.PAGE_H_ACCEPTLANG)
 
@@ -23,7 +25,7 @@
 <h2>Accept-Languageから最適な言語をデフォルト選択した状態</h2>
 <form>
     <label asp-for="@Model.SelectedUICultureValue"></label>
-    <select asp-for="@Model.SelectedUICultureValue" asp-items="@Model.SupportedUICultureSelectedItems"></select>
+    <select asp-for="@Model.SelectedUICultureValue" asp-items="@Model.SupportedUICultureSelectedItems" class="form-select"></select>
 </form>
 
 @section Scripts{
@@ -34,6 +36,20 @@
 
             const userLanguage = navigator.language || navigator.userLanguage;
             console.log(userLanguage);
+
+            $('#@nameof(Model.SelectedUICultureValue)').on('change', function (e) {
+                console.log('変更');
+                //console.log(e.target);
+                const $elem = $(e.target);
+                const culture = $elem.val();
+                console.log(culture);
+
+                const cookieValue = `c=${culture}|uic=${culture}`;
+
+                // クッキーのセット（有効期限を指定しないとブラウザを閉じるまで）
+                document.cookie = `lang=${cookieValue}; path=/`;
+                console.log('langにセット', cookieValue);
+            });
         });
     </script>
 }

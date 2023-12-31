@@ -132,6 +132,9 @@
   <data name="ESEASON_WINTER" xml:space="preserve">
     <value>Winter</value>
   </data>
+  <data name="LANGUAGE_SELECTS" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="PAGE_ENUM_ILIKESEASON" xml:space="preserve">
     <value>I like season:</value>
   </data>
