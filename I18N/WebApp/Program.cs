@@ -23,7 +23,8 @@ namespace WebApp
 
             var supportedCultures = new[]
             {
-                new CultureInfo("ja"),
+                new CultureInfo("en"),
+                new CultureInfo("ja")
             };
 
             var reqLocOpts = new RequestLocalizationOptions
@@ -32,12 +33,15 @@ namespace WebApp
                     //クッキー:.AspNetCore.Culture
                     //フォーマット:c=<カルチャーコード>|uic=<カルチャーコード>
                     new CookieRequestCultureProvider{CookieName = "lang"},
-                    new AcceptLanguageHeaderRequestCultureProvider()
+                    new AcceptLanguageHeaderRequestCultureProvider{MaximumAcceptLanguageHeaderValuesToTry = 10 }
                 },
                 DefaultRequestCulture = new RequestCulture(""),
-                //SupportedCultures = supportedCultures,　// Formatting numbers, dates, etc.
-                SupportedUICultures = supportedCultures　// UI strings that we have localized.
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
             };
+
+            var neutral = new CultureInfo("");
+            var invariant = CultureInfo.InvariantCulture;
 
             //var reqLocOpts = new RequestLocalizationOptions();
             //[0]: { Microsoft.AspNetCore.Localization.QueryStringRequestCultureProvider}

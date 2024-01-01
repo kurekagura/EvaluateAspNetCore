@@ -21,4 +21,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- ビルド前に Resx/All.en.resx を Resx/All.resx へコピー -->
+    <Target Name="CopyAllResx" BeforeTargets="Build">
+    <Copy SourceFiles="Resx\All.en.resx" DestinationFiles="Resx\All.resx" SkipUnchangedFiles="true" />
+  </Target>
+  
 </Project>
