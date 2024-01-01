@@ -23,10 +23,11 @@
 </ul>
 
 <h2>Accept-Languageから最適な言語をデフォルト選択した状態</h2>
-<form>
-    <label asp-for="@Model.SelectedUICultureValue"></label>
-    <select asp-for="@Model.SelectedUICultureValue" asp-items="@Model.SupportedUICultureSelectedItems" class="form-select"></select>
-</form>
+
+<label asp-for="@Model.SelectedUICultureValue"></label>
+<select asp-for="@Model.SelectedUICultureValue" asp-items="@Model.SupportedUICultureSelectedItems" class="form-select"></select>
+
+<button id="IdSetCookieBTN" type="button">クッキー発行</button>
 
 @section Scripts{
 
@@ -38,10 +39,12 @@
             console.log(userLanguage);
 
             $('#@nameof(Model.SelectedUICultureValue)').on('change', function (e) {
-                console.log('変更');
-                //console.log(e.target);
-                const $elem = $(e.target);
-                const culture = $elem.val();
+                
+            });
+
+            $('#IdSetCookieBTN').on('click', function () {
+                const $select = $('#@nameof(Model.SelectedUICultureValue)');
+                const culture = $select.val();
                 console.log(culture);
 
                 const cookieValue = `c=${culture}|uic=${culture}`;
