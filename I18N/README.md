@@ -1,10 +1,40 @@
 # 多言語化
 
+## RequestCultureProviders
+
 RequestLocalizationOptionsの既定では、RequestCultureProvidersに以下の三つ登録される。
 
 - QueryStringRequestCultureProvider
 - CookieRequestCultureProvider
 - AcceptLanguageHeaderRequestCultureProvider
+
+## ニュートラル言語をenとする場合
+
+クッキーでニュートラル言語を指定することはできない。そのためAccept-Langauageにjaのあるブラウザでは、en.resxが存在しなければ、ニュートラル言語にいきつく以前にjaが利用されてしまう。そのため、日本語ブラウザに対して、英語選択を機能させるために必ずen.resxを提供する必要がある。
+
+en.resxをマスターとして、.resx（ニュートラル言語）をコピーすることで、この問題を回避する。
+
+```xml
+  <ItemGroup>
+    <Compile Update="Resx\All.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>All.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resx\All.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>All.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- ビルド前に Resx/All.en.resx を Resx/All.resx へコピー -->
+  <Target Name="CopyAllResx" BeforeTargets="Build">
+    <Copy SourceFiles="Resx\All.en.resx" DestinationFiles="Resx\All.resx" SkipUnchangedFiles="true" />
+  </Target>
+```
 
 ## select要素
 
