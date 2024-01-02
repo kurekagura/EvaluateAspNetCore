@@ -117,31 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ESEASON_AUTUMN" xml:space="preserve">
-    <value>秋</value>
-  </data>
-  <data name="ESEASON_SPRING" xml:space="preserve">
-    <value>春</value>
-  </data>
-  <data name="ESEASON_SUMMER" xml:space="preserve">
-    <value>夏</value>
-  </data>
-  <data name="ESEASON_WINTER" xml:space="preserve">
-    <value>冬</value>
-  </data>
-  <data name="LANGUAGE_SELECTS" xml:space="preserve">
-    <value>言語選択</value>
-  </data>
-  <data name="PAGE_ENUM_ILIKESEASON" xml:space="preserve">
-    <value>私の好きな季節：</value>
-  </data>
-  <data name="PAGE_H_ACCEPTLANG" xml:space="preserve">
-    <value>&lt;h2&gt;Accept-Languageの検証&lt;/h2&gt;</value>
-  </data>
-  <data name="PAGE_TITLE_ENUM" xml:space="preserve">
-    <value>enumのテスト</value>
-  </data>
-  <data name="PAGE_TITLE_HOME" xml:space="preserve">
-    <value>ホーム</value>
+  <data name="home" xml:space="preserve">
+    <value>ホーム（Pageリソース）</value>
   </data>
 </root>

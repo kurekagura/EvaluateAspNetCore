@@ -22,8 +22,11 @@
   </ItemGroup>
 
   <!-- ビルド前に Resx/All.en.resx を Resx/All.resx へコピー -->
+  <!-- 英語をニュートラル言語とするため -->
   <Target Name="CopyAllResx" BeforeTargets="Build">
     <Copy SourceFiles="Resx\All.en.resx" DestinationFiles="Resx\All.resx" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Resx\Pages\Shared\_Layout.en.resx" DestinationFiles="Resx\Pages\Shared\_Layout.resx" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="Resx\Pages\Html\Index.en.resx" DestinationFiles="Resx\Pages\Html\Index.resx" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
+using System.Reflection;
 
 namespace WebApp
 {
@@ -11,11 +13,15 @@ namespace WebApp
 
             // Add services to the container.
             var mvcBuilder = builder.Services.AddRazorPages();
-            mvcBuilder.AddDataAnnotationsLocalization(o =>
+            //builder.Services.AddLocalization(opts => opts.ResourcesPath = "Resx"); //«‰½‚ê‚©‚ÅOK
+            mvcBuilder.AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => opts.ResourcesPath = "Resx");
+            mvcBuilder.AddDataAnnotationsLocalization(opts =>
             {
-                o.DataAnnotationLocalizerProvider = (type, factory) =>
+                opts.DataAnnotationLocalizerProvider = (type, factory) =>
                 {
-                    return factory.Create(typeof(WebApp.Resx.All));
+                    var asmName = typeof(WebApp.Resx.All).Assembly.GetName();
+                    //return factory.Create(typeof(WebApp.Resx.All));
+                    return factory.Create(nameof(WebApp.Resx.All), asmName.Name!);
                 };
             });
 
@@ -39,6 +45,7 @@ namespace WebApp
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures
             };
+            //reqLocOpts.SetDefaultCulture("en");
 
             var neutral = new CultureInfo("");
             var invariant = CultureInfo.InvariantCulture;
