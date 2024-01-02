@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="acceptlanguage" xml:space="preserve">
+    <value>Accept-Languageヘッダ</value>
+  </data>
   <data name="home" xml:space="preserve">
     <value>ホーム（Pageリソース）</value>
+  </data>
+  <data name="html" xml:space="preserve">
+    <value>HTML</value>
+  </data>
+  <data name="menu_enum" xml:space="preserve">
+    <value>列挙型</value>
+  </data>
+  <data name="validation" xml:space="preserve">
+    <value>入力検証</value>
   </data>
 </root>

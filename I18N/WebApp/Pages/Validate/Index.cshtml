@@ -1,0 +1,61 @@
+﻿@page
+@model WebApp.Pages.Validate.IndexModel
+@{
+    var handlerUrl = Url.Page(pageName: "/Validate/Index", pageHandler: "PageHandler");
+}
+
+<form method="post">
+    <div>
+        @*         <label asp-for="InputText1">テキスト</label>
+        <input asp-for="InputText1" placeholder="placeholderは推奨" autocomplete="off">
+        <span asp-validation-for="InputText1" class="text-danger"></span>
+        *@
+        <label asp-for="InputText1">テキスト</label>
+        <input asp-for="InputText1" placeholder="placeholderは推奨" autocomplete="off">
+        <span asp-validation-for="InputText1" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn-danger">FormPost</button>
+</form>
+
+<hr />
+
+<form method="post">
+    <div>
+        <label asp-for="InputText2">テキスト</label>
+        <input asp-for="InputText2" placeholder="placeholderは推奨" autocomplete="off">
+        <span asp-validation-for="InputText2" class="text-danger"></span>
+    </div>
+</form>
+
+<button type="button" class="btn-primary" id="IdPostBT">ハンドラへPOST</button>
+
+@section Scripts{
+    @*     @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    } *@
+    <script>
+
+        $(async () => {
+
+            $('#IdPostBT').on('click', function () {
+                const newFd = new FormData();
+                newFd.append('input', document.getElementById('InputText2').value);
+
+                fetch('@handlerUrl', {
+                    method: 'POST',
+                    body: newFd
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).then(json => {
+                    console.log(json);
+                }).catch(error => {
+                    console.error(error);
+                });
+            });
+        });
+
+    </script>
+}
