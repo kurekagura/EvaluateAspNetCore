@@ -67,6 +67,10 @@ en.resxをマスターとして、.resx（ニュートラル言語）をコピ�
 </form>
 ```
 
+## PublicResXFileCodeGenerator
+
+.Designer.csを利用する場合（文字列アクセスではなくC#のメンバ名としてアクセスする場合）、アクセス修飾子はinternalでもOKのよう。
+
 ## 深謝
 
 - [Enumに定義してあるDisplay属性を表示する。リソースファイルがある場合、リソースから取得する拡張メソッド](https://qiita.com/mak_in/items/7909e51d249826115403)
