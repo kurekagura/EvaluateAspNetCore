@@ -36,6 +36,19 @@ en.resxをマスターとして、.resx（ニュートラル言語）をコピ�
   </Target>
 ```
 
+## 試作①（失敗）
+
+（リソースに"文字列"ではなくC#識別子でアクセスするのに必要となる）All.Designer.csをAll.en.resxから直接生成したいと考え、以下を試したがNGだった。All.resxを不要としたかったが標準の仕組みでは無理のよう(?)。
+
+```xml
+  <ItemGroup>
+    <EmbeddedResource Update="Resx\All.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resx\All.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+```
+
 ## select要素
 
 組込み型SelectListとTupleを使うのがシンプル。
@@ -57,3 +70,5 @@ en.resxをマスターとして、.resx（ニュートラル言語）をコピ�
 ## 深謝
 
 - [Enumに定義してあるDisplay属性を表示する。リソースファイルがある場合、リソースから取得する拡張メソッド](https://qiita.com/mak_in/items/7909e51d249826115403)
+
+- [Multilingual Support and Localisation in ASP.NET Core Web Application with Razor Pages](https://www.youtube.com/watch?v=rRpLIytLtbQ)
