@@ -35,6 +35,18 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">@Loc[nameof(home)]</a>
                         </li>
                     </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                Lang
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="@Url.Page("/SwitchLang", values: new { culture = "en" })">En</a></li>
+                                <li><a class="dropdown-item" href="@Url.Page("/SwitchLang", values: new { culture = "ja" })">Ja</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
