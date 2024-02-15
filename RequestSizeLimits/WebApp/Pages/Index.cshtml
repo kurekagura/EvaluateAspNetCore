@@ -1,0 +1,41 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    var url = Url.Page("/Index", "UploadFile");
+}
+
+<h1>RequestFormLimits属性の検証</h1>
+
+<input type="file" id="fileInput">
+<button onclick="uploadFile()">Upload</button>
+
+<div id="message"></div>
+
+@section Scripts {
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            const formData = new FormData();
+            formData.append('uploadedFile', file);
+
+            try {
+                const response = await fetch('@url', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload file.');
+                }
+
+                document.getElementById('message').innerText = 'File uploaded successfully.';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').innerText = 'Failed to upload file.';
+            }
+        }
+    </script>
+}
